@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="./vue.js"></script>
+    <title>提高</title>
+    <style>
+        body,html{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #EEE;
+        }
+        #header{
+            position: absolute;
+            font-size: 24px;
+            top: 0;
+            border-radius: 0 0 30px 30px;
+            width: 100%;
+            padding-top: 20px;
+            color: whitesmoke;
+            background-color: #314E92;
+        }
+        #headerNav{
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        #underpoint{
+            margin: auto;
+            width: 8px;
+            height: 8px;
+            border-radius: 8px;
+            background-color: gold;
+            border-style: solid;
+        }
+        #search{
+            width: 90%;
+            position: absolute;
+            top: 80px;
+            left: 5%;
+        }
+        #content{
+            overflow: auto;
+            position: absolute;
+            top: 135px;
+            left: 0;
+            right: 0;
+            bottom: 60px;
+        }
+        #footer{
+            position: absolute;
+            bottom: 0;
+            padding-top: 10px;
+            height: 60px;
+            width: 100%;
+            background-color: whitesmoke;
+        }
+        .horizontalMenu{
+            display: flex;
+            justify-content: space-between;
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+        .horizontalMenu li{
+            list-style-type: none;
+            font-size: 12px;
+            width: 150px;
+            text-align: center;
+        }
+        .menuChosen{
+            color: #314E92;
+        }
+        .card
+        {
+            display: flex;
+            justify-content: space-between;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+            /* transition: 0.3s; */
+            width: 90%;
+            margin: auto;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background-color: white;
+        }
+        .cardContent
+        {
+            width: 70%;
+            /* justify-content: space-around; */
+            display: flex;
+            align-self: center;
+            flex-flow: column wrap;
+        }
+        .cardSmall
+        {
+            
+            justify-content: space-around;
+            display: flex;
+            flex-direction: row;
+        }
+        .cardTitle
+        {
+            padding: 15px;
+            flex: 4;
+            color: black;
+            font-size: 20px;
+        }
+        .cardText
+        {
+            padding: 15px;
+            /* width: 50%; */
+            flex: 4;
+            color:gray;
+            font-size: 18px;
+
+        }
+        .cardImg
+        {
+            width: 120px;
+            height: 120px;
+            border-radius: 15px 15px 15px 15px;
+            padding: 10px;
+            align-self: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="header">
+            <div id="headerNav">
+                &nbsp;
+                <span style="color: gold;">讨论区<br><div id="underpoint"></div></span>
+                <span @click="sendRedirect('./enhance/self.html')">自习室</span>
+                &nbsp;
+            </div>
+        </div>
+        <div id="search">
+            <input class="form-control" placeholder="搜索你感兴趣的内容" style="border-radius: 15px;" v-model="search">
+        </div>
+        <div id="content">
+            <div @click="thanks" class="card" v-for="(item, index) in cardDataFilter" :key="index">
+                <div class="cardContent">
+                    <div class="cardTitle">{{item.title}}
+                    </div>
+                    <div class="cardSmall">
+                        <span class="cardText">评论: {{item.commentNum}}
+                        </span>
+                        <span class="cardText">点赞: {{item.goodNum}}
+                        </span>
+                    </div>
+                </div>
+                <img class="cardImg" :src="item.imgUrl">
+            </div>
+        </div>
+        <div id="footer">
+            <ul class="horizontalMenu">
+                <li v-for="(item, index) in downMenu" :key="index" :class="{menuChosen:item.isChosen}" @click="sendRedirect(item.url)">
+                    <span :class="item.iconClass" aria-hidden="true"></span><br>{{item.label}}
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            downMenu: [
+                {iconClass: 'glyphicon glyphicon-list', label: '课程', url: './course.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-heart', label: '体验', url: './experience.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-comment', label: '交流', url: './enhance.html', isChosen: true},
+                {iconClass: 'glyphicon glyphicon-yen', label: '职业', url: './try.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-user', label: '我的', url: './my.html', isChosen: false}
+            ],
+            search: '',
+            cardData: [
+                {title: '第一天在腾讯实习', commentNum: 32, goodNum: 180, imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fnimg.ws.126.net%2F%3Furl%3Dhttp%3A%2F%2Fdingyue.ws.126.net%2F2021%2F0908%2Fe5a684f7j00qz4glc000tc000go00b4g.jpg%26thumbnail%3D650x2147483647%26quality%3D80%26type%3Djpg&refer=http%3A%2F%2Fnimg.ws.126.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642349672&t=2e1228ece79bb2f3abf22f0ac578bae4'},
+                {title: '光盘还能这么刻？', commentNum: 100, goodNum: 93, imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fdingyue.ws.126.net%2FQcAOgTfVSaZmwcKAZEEmOZyQu6fApJJHTqvOT6e6GO57w1520343044126.jpeg&refer=http%3A%2F%2Fdingyue.ws.126.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642350837&t=cfb3ea3e8dc9c6d8d8c889f7b7367672'},
+                {title: '一面平面设计师有感', commentNum: 56, goodNum: 203, imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2Ff54217a46303b8b18ceb005b09d3931a34b142df.jpg&refer=http%3A%2F%2Fi0.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642350473&t=88c936475bde45bbb177022d8388cef6'},
+                {title: '我学C语言犯的错，太搞笑了', commentNum: 15, goodNum: 52, imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg7.51tietu.net%2Fpic%2F2019-082108%2Fyji4j32a0wuyji4j32a0wu.jpg&refer=http%3A%2F%2Fimg7.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642350682&t=577ce9edeedc0eb5b5cc6dd6850075b9'},
+                {title: '找不到学习的目标，怎么办？', commentNum: 69, goodNum: 12, imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F202004%2F03%2F20200403042736_mwuxZ.thumb.400_0.gif&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642350933&t=489137af495ec1e2f4e054e2bbe92907'},
+            ]
+        },
+        computed: {
+            cardDataFilter:function(){
+                const {search, cardData} = this
+                let res
+                res = cardData.filter(d => d.title.indexOf(search) >= 0)
+                return res
+            }
+        },
+        methods: {
+            sendRedirect:function(url){
+                window.location.href = url
+            },
+            thanks:function(){
+                alert('暂时无法看帖子噢，谢谢支持！')
+            }
+        }
+    })
+</script>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <script src="./vue.js"></script>
+    <title>课程</title>
+    <style>
+        body,html{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #EEE;
+        }
+        #header{
+            position: absolute;
+            top: 0;
+            border-radius: 0 0 30px 30px;
+            width: 100%;
+            padding-top: 20px;
+            color: whitesmoke;
+            background-color: #314E92;
+        }
+        #content{
+            position: absolute;
+            bottom: 60px;
+            top: 255px;
+            width: 100%;
+            /* background-color: aquamarine; */
+            overflow: auto;
+        }
+        #footer{
+            position: absolute;
+            bottom: 0;
+            padding-top: 10px;
+            height: 60px;
+            width: 100%;
+            background-color: whitesmoke;
+        }
+        .horizontalMenu{
+            display: flex;
+            justify-content: space-between;
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+        .horizontalMenu li{
+            list-style-type: none;
+            font-size: 12px;
+            width: 150px;
+            text-align: center;
+        }
+        .liUnchosen{
+            color: #aeb4c0
+        }
+        .underline{
+            margin: auto;
+            margin-top: 8px;
+            width: 50%;
+            height: 8px;
+            background-color: gold;
+            border-radius: 6px;
+        }
+        .a{
+            text-decoration: none;
+            color: black;
+        }
+        .courseCard{
+            width: 90%;
+            display: flex;
+            margin: auto;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: whitesmoke;
+            box-shadow: -5px 5px 5px #b4b4b4;
+            color: black;
+        }
+        .menuChosen{
+            color: #314E92;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="header">
+            <br>
+            <h1 style="font-size: 32px; margin-left: 5%;">Hi!&nbsp;小橙子</h1>
+            <h3 style="font-size: 16px; margin-left: 5%;">2021级教育技术学（师范）01</h3>
+            <br><br>
+            <ul class="horizontalMenu">
+                <li v-for="(item, index) in topMenu" :key="index" @click="changeTag(item.name)" :class="{liUnchosen:!item.isChosen}">
+                    {{item.name}}
+                    <br>
+                    <div class="underline" v-show="item.isChosen"></div>
+                </li>
+                <!-- <li>教育师范<br><div class="underline"></div></li>
+                <li>编程开发<br><div class="underline"></div></li>
+                <li>媒体设计<br><div class="underline"></div></li>
+                <li>基础课程<br><div class="underline"></div></li> -->
+            </ul>
+            <br>
+        </div>
+        <div id="content">
+            <a v-for="(course, index) in taggedCourses" :key="index" :href="course.infoUrl">
+                <div class="courseCard">
+                    <img :src="course.imgUrl" alt="" style="border-radius: 10px; width: 80px; height: 80px;">
+                    <div style="margin-left: 20px;">
+                        <h3>{{course.courseName}}</h3>
+                        <h5>{{course.teacher}}</h5>
+                    </div>
+                </div>
+            </a>
+            <p style="text-align: center; margin-top: 15px;">更多内容开发中...</p>
+        </div>
+        <div id="footer">
+            <ul class="horizontalMenu">
+                <li v-for="(item, index) in downMenu" :key="index" :class="{menuChosen:item.isChosen}" @click="sendRedirect(item.url)">
+                    <span :class="item.iconClass" aria-hidden="true"></span><br>{{item.label}}
+                </li>
+                <!-- <li style="color: #314E92;"><span class="glyphicon glyphicon-list" aria-hidden="true"></span><br>课程</li>
+                <li><span class="glyphicon glyphicon-heart" aria-hidden="true"></span><br>体验</li>
+                <li><span class="glyphicon glyphicon-flag" aria-hidden="true"></span><br>尝试</li>
+                <li><span class="glyphicon glyphicon-signal" aria-hidden="true"></span><br>提高</li>
+                <li><span class="glyphicon glyphicon-user" aria-hidden="true"></span><br>我的</li> -->
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data:{
+            topMenu: [
+                {name: '教育师范', isChosen: true},
+                {name: '编程开发', isChosen: false},
+                {name: '媒体设计', isChosen: false},
+                {name: '基础课程', isChosen: false},
+            ],
+            downMenu: [
+                {iconClass: 'glyphicon glyphicon-list', label: '课程', url: './course.html', isChosen: true},
+                {iconClass: 'glyphicon glyphicon-heart', label: '体验', url: './experience.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-comment', label: '交流', url: './enhance.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-yen', label: '职业', url: './try.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-user', label: '我的', url: './my.html', isChosen: false}
+            ],
+            courses: [
+                {courseName: 'C语言程序设计', teacher: '廖红', infoUrl: './courses/CLanguage.html', tag: '编程开发', imgUrl: 'https://gss0.baidu.com/9vo3dSag_xI4khGko9WTAnF6hhy/zhidao/wh%3D600%2C800/sign=1557fbb338a85edffad9f6257964251b/37d3d539b6003af393e14e83392ac65c1138b6fe.jpg'},
+                {courseName: '数据库原理', teacher: '涂相华', infoUrl: './courses/database.html', tag: '编程开发', imgUrl: 'https://tse4-mm.cn.bing.net/th/id/OIP-C.KGkeT4BBUGdyTKDwWjDY8wHaHa?pid=ImgDet&rs=1'},
+                {courseName: '设计与创意', teacher: '程醉', infoUrl: './courses/ideaAndDesign.html', tag: '媒体设计', imgUrl: 'https://tse1-mm.cn.bing.net/th/id/R-C.9a7699ba0a17befea7a5df3c5b95621f?rik=si%2f4DfYgx9c%2fRA&riu=http%3a%2f%2fpic.51yuansu.com%2fpic3%2fcover%2f03%2f29%2f41%2f5b7e0ef6cff55_610.jpg&ehk=byfsg0v%2fvb5wfHxAGQHdzlBUv6fHgnNqrQK0P%2fOhFqY%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1'},
+                {courseName: '电视编导与制作', teacher: '李文光', infoUrl: './courses/TVMaking.html', tag: '媒体设计', imgUrl: 'https://tse1-mm.cn.bing.net/th/id/R-C.878d1a557ba8fd4ef418a5b7ac949da8?rik=uGK7m5oGxgEmWw&riu=http%3a%2f%2fbpic.588ku.com%2felement_pic%2f16%2f10%2f31%2f2c1d857bfa8c90859b92aa4d07ca76e2.jpg&ehk=zoEkrOqalsdSQban33QQ%2fSpj%2bAbvNyOwuvyg7rBHIJQ%3d&risl=&pid=ImgRaw&r=0'},
+                {courseName: '教育技术导论', teacher: '李文光', infoUrl: './courses/ET.html', tag: '教育师范', imgUrl: 'https://icweiliimg1.pstatp.com/weili/bl/256656104540602378.jpg'},
+                {courseName: '网络安全技术', teacher: '李冰', infoUrl: './courses/netSafety.html', tag: '基础课程', imgUrl: 'https://tse1-mm.cn.bing.net/th/id/R-C.f7119872363e1508cf881620a5e387ae?rik=xsPC2jFnXxFltw&riu=http%3a%2f%2fbpic.588ku.com%2felement_pic%2f18%2f04%2f05%2f3f416a61595b299fc0bee2a8827f7a5a.jpg&ehk=NYAFJ3NskuyHBUtcKrr9P4LyRdQL%2bzI%2bNx6tfdYVgxU%3d&risl=&pid=ImgRaw&r=0'},
+            ],
+            tagChoose: '教育师范'
+        },
+        computed:{
+            taggedCourses:function(){
+                const {tagChoose, courses} = this
+                let fCourses
+                fCourses = this.courses.filter(c => tagChoose.indexOf(c.tag) >= 0)
+                return fCourses
+            }
+        },
+        methods: {
+            changeTag:function(newTag){
+                this.tagChoose = newTag
+                this.topMenu.forEach(element => {
+                    if(element.name === newTag){
+                        element.isChosen = true
+                    }else{
+                        element.isChosen = false;
+                    }
+                });
+            },
+            sendRedirect:function(url){
+                window.location.href = url
+            }
+        }
+    })
+</script>

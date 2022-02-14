@@ -1,0 +1,74 @@
+body,html{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    background-color: #EEE;
+}
+#header{
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+    top: 0;
+    width: 100%;
+    padding: 20px;
+    font-size: 36px;
+    padding-top: 20px;
+    color: #314E92;
+}
+#content{
+    position: absolute;
+    bottom: 60px;
+    top: 80px;
+    left: 10%;
+    right: 10%;
+    width: 80%;
+    /* background-color: aquamarine; */
+    overflow: auto;
+}
+#footer{
+    position: absolute;
+    bottom: 0;
+    padding-top: 10px;
+    height: 60px;
+    width: 100%;
+    background-color: whitesmoke;
+}
+.horizontalMenu{
+    display: flex;
+    justify-content: space-between;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+.horizontalMenu li{
+    list-style-type: none;
+    font-size: 12px;
+    width: 150px;
+    text-align: center;
+}
+#video{
+    width: 100%;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 55px;
+    text-align: center;
+    border-radius: 10px;
+    border-color: black;
+    border-style: solid;
+    box-shadow: -3px 3px 5px #c9c9c9;
+}
+.labelAdjust{
+    box-shadow: -3px 3px 5px #c9c9c9;
+    padding: 5px;
+    margin-right: 5px;
+}
+.a{
+    text-decoration: none;
+}
+.para{
+    color: rgb(125, 125, 125);
+}
+.menuChosen{
+    color: #314E92;
+}

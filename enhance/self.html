@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="../vue.js"></script>
+    <title>发现</title>
+    <link rel="stylesheet" href="self1.css" type="text/css"/>
+    <style>
+        body,html{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #4562a5;
+        }
+        #header{
+            position: absolute;
+            font-size: 24px;
+            top: 0;
+            border-radius: 0 0 30px 30px;
+            width: 100%;
+            padding-top: 20px;
+            color: whitesmoke;
+            background-color: #314E92;
+        }
+        #headerNav{
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        #underpoint{
+            margin: auto;
+            width: 8px;
+            height: 8px;
+            border-radius: 8px;
+            background-color: gold;
+            border-style: solid;
+        }
+        #content{
+            position: absolute;
+            top: 75px;
+            bottom: 60px;
+            left: 0;
+            right: 0;
+        }
+        #footer{
+            position: absolute;
+            bottom: 0;
+            padding-top: 10px;
+            height: 60px;
+            width: 100%;
+            background-color: whitesmoke;
+        }
+        .horizontalMenu{
+            display: flex;
+            justify-content: space-between;
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+        .horizontalMenu li{
+            list-style-type: none;
+            font-size: 12px;
+            width: 150px;
+            text-align: center;
+        }
+        .menuChosen{
+            color: #314E92;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="header">
+            <div id="headerNav">
+                &nbsp;
+                <span @click="sendRedirect('../enhance.html')">讨论区</span>
+                <span style="color: gold;">自习室<br><div id="underpoint"></div></span>
+                &nbsp;
+            </div>
+        </div>
+        <div id="content" class="content">
+            <div style="height: 200px; display: flex; justify-content: space-between; flex-direction: column;">
+                <div class="button" @click="enterRoom">
+                    <div class="buttontext">
+                        创建房间
+                    </div>
+                </div>
+                <div class="button">
+                    <div class="buttontext" @click="enterRoom">
+                        加入房间
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="footer">
+            <ul class="horizontalMenu">
+                <li v-for="(item, index) in downMenu" :key="index" :class="{menuChosen:item.isChosen}" @click="sendRedirect(item.url)">
+                    <span :class="item.iconClass" aria-hidden="true"></span><br>{{item.label}}
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            downMenu: [
+                {iconClass: 'glyphicon glyphicon-list', label: '课程', url: '../course.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-heart', label: '体验', url: '../experience.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-comment', label: '交流', url: '../enhance.html', isChosen: true},
+                {iconClass: 'glyphicon glyphicon-yen', label: '职业', url: '../try.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-user', label: '我的', url: '../my.html', isChosen: false}
+            ]
+        },
+        methods: {
+            sendRedirect:function(url){
+                window.location.href = url
+            },
+            enterRoom:function(){
+                alert('现在假设你创建/加入了一个房间，房间里有两个人。')
+                this.sendRedirect('./studyRoom.html')
+            }
+        }
+    })
+</script>

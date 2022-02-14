@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="./vue.js"></script>
+    <title>体验</title>
+    <style>
+        body,html{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #EEE;
+        }
+        #game{
+            position: absolute;
+            padding-top: 50px;
+            top: 0;
+            bottom: 60px;
+            left: 0;
+            right: 0;
+            background-color: #314E92;
+            text-align: center;
+            color: gold;
+            overflow: auto;
+        }
+        .gameChoice{
+            width: 50%;
+            margin-top: 50px;
+        }
+        #footer{
+            position: absolute;
+            bottom: 0;
+            padding-top: 10px;
+            height: 60px;
+            width: 100%;
+            background-color: whitesmoke;
+        }
+        .horizontalMenu{
+            display: flex;
+            justify-content: space-between;
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+        .horizontalMenu li{
+            list-style-type: none;
+            font-size: 12px;
+            width: 150px;
+            text-align: center;
+        }
+        .menuChosen{
+            color: #314E92;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="game">
+            <h3>我想体验</h3>
+            <button type="button" class="btn btn-warning gameChoice" @click="sendRedirect('./game/teacher.html')">信息技术教师</button>
+            <button type="button" class="btn btn-warning gameChoice" disabled="disabled">程序员（开发中）</button>
+            <button type="button" class="btn btn-warning gameChoice" disabled="disabled">设计师（开发中）</button>
+            <p style="text-align: center; margin-top: 50px;">更多内容开发中...</p>
+        </div>
+        <div id="footer">
+            <ul class="horizontalMenu">
+                <li v-for="(item, index) in downMenu" :key="index" :class="{menuChosen:item.isChosen}" @click="sendRedirect(item.url)">
+                    <span :class="item.iconClass" aria-hidden="true"></span><br>{{item.label}}
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            downMenu: [
+                {iconClass: 'glyphicon glyphicon-list', label: '课程', url: './course.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-heart', label: '体验', url: './experience.html', isChosen: true},
+                {iconClass: 'glyphicon glyphicon-comment', label: '交流', url: './enhance.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-yen', label: '职业', url: './try.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-user', label: '我的', url: './my.html', isChosen: false}
+            ]
+        },
+        methods: {
+            sendRedirect:function(url){
+                window.location.href = url
+            }
+        },
+    })
+</script>

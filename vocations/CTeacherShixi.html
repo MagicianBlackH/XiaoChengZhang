@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="zhiye.css" type="text/css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="../vue.js"></script>
+    <title>信息技术老师实习</title>
+    <style>
+        body,html{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #EEE;
+        }
+        #header{
+            position: absolute;
+            display: flex;
+            justify-content: space-between;
+            top: 0;
+            width: 100%;
+            padding: 20px;
+            font-size: 36px;
+            padding-top: 20px;
+            color: #314E92;
+        }
+        #content{
+            position: absolute;
+            bottom: 60px;
+            top: 90px;
+            width: 100%;
+            overflow: auto;
+            color: #7a7a7a;
+        }
+        #footer{
+            position: absolute;
+            bottom: 0;
+            padding-top: 10px;
+            height: 60px;
+            width: 100%;
+            background-color: whitesmoke;
+        }
+        .horizontalMenu{
+            display: flex;
+            justify-content: space-between;
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+        .horizontalMenu li{
+            list-style-type: none;
+            font-size: 12px;
+            width: 150px;
+            text-align: center;
+        }
+        .menuChosen{
+            color: #314E92;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div id="header">
+            <a href="../try.html">
+                <span class="el-icon-arrow-left"></span>
+            </a>
+            <span style="font-size: 18px; align-self: center;">信息技术老师实习信息</span>
+            <a @click="thanks">
+                <span class="el-icon-collection-tag"></span>
+            </a>
+        </div>
+        <div id="content">
+            <div class="ganwei">
+                <h3 style="color: #314e92;line-height: 2;">岗位基本信息</h3>
+                <h4>岗位职责：</h4>
+                <p>根据课程设置要求，积极认真备课、教学，课后做好总结工作。</p>
+                <br>
+                <h4>岗位要求：</h4>
+                <p>教育师范类、计算机、理工科或英文类等专业；<br>普通话标准，具有良好的沟通能力。
+                </p>
+            </div>
+            <div class="shixi">
+                <h3 style="color: #314e92;line-height: 2;">近期实习</h3>
+                <div v-for="(item, index) in workList" :key="index" class="card" style="margin: 10px 0; padding: 10px;">
+                    <span style="color: #7a7a7a;">实习地点：{{item.address}}</span>
+                    <span style="color: #7a7a7a;">实习时间：{{item.dur}}</span>
+                    <!-- <a>查看链接</a> -->
+                    <button type="button" class="btn btn-primary" @click="thanks2(item.url)" style="text-align: center; width: 90%; margin: auto;">查看链接</button>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 15px;">更多内容开发中...</p>
+        </div>
+        <div id="footer">
+            <ul class="horizontalMenu">
+                <li v-for="(item, index) in downMenu" :key="index" :class="{menuChosen:item.isChosen}" @click="sendRedirect(item.url)">
+                    <span :class="item.iconClass" aria-hidden="true"></span><br>{{item.label}}
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            downMenu: [
+                {iconClass: 'glyphicon glyphicon-list', label: '课程', url: '../course.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-heart', label: '体验', url: '../experience.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-comment', label: '交流', url: '../enhance.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-yen', label: '职业', url: '../try.html', isChosen: true},
+                {iconClass: 'glyphicon glyphicon-user', label: '我的', url: '../my.html', isChosen: false}
+            ],
+            workList: [
+                {address: '梦想编程', dur: '6个月', url:'https://www.shixiseng.com/intern/inn_lfjxzou5gjqa?pcm=pc_SearchList'},
+                {address: '南译电子商务', dur: '3个月', url: 'https://www.shixiseng.com/intern/inn_zqppmodsqmew?pcm=pc_SearchList'},
+            ]
+        },
+        methods: {
+            sendRedirect:function(url){
+                window.location.href = url
+            },
+            thanks:function(){
+                alert("这是收藏功能，\n还在开发中，\n谢谢支持！")
+            },
+            thanks2:function(url){
+                if(url === ''){
+                    alert('该条信息暂时是假的，\n请查看其他信息！\n谢谢支持！')
+                }else{
+                    this.sendRedirect(url)
+                }
+            }
+        }
+    })
+</script>

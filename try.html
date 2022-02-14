@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="./vocations/zhiye.css">
+    <script src="./vue.js"></script>
+    <title>尝试</title>
+    <style>
+        body,html{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #EEE;
+        }
+        #header{
+            position: absolute;
+            top: 0;
+            border-radius: 0 0 30px 30px;
+            width: 100%;
+            padding-top: 20px;
+            color: whitesmoke;
+            background-color: #314E92;
+        }
+        .liUnchosen{
+            color: #aeb4c0
+        }
+        .underline{
+            margin: auto;
+            margin-top: 8px;
+            width: 50%;
+            height: 8px;
+            background-color: gold;
+            border-radius: 6px;
+        }
+        #content{
+            position: absolute;
+            bottom: 60px;
+            top: 130px;
+            width: 100%;
+            overflow: auto;
+        }
+        #footer{
+            position: absolute;
+            bottom: 0;
+            padding-top: 10px;
+            height: 60px;
+            width: 100%;
+            background-color: whitesmoke;
+        }
+        .horizontalMenu{
+            display: flex;
+            justify-content: space-between;
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+        .horizontalMenu li{
+            list-style-type: none;
+            font-size: 12px;
+            width: 150px;
+            text-align: center;
+        }
+        .menuChosen{
+            color: #314E92;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="header">
+            <div style="width: 80%; margin: auto;">
+                <input class="form-control" placeholder="输入感兴趣的职业关键词" style="border-radius: 15px;" v-model="search">
+            </div>
+            <br>
+            <ul class="horizontalMenu">
+                <li v-for="(item, index) in topMenu" :key="index" @click="changeTag(item.name)" :class="{liUnchosen:!item.isChosen}">
+                    {{item.name}}
+                    <br>
+                    <div class="underline" v-show="item.isChosen"></div>
+                </li>
+            </ul>
+            <br>
+        </div>
+    
+        <div id="content">
+            <div class="item" v-for="(v, index) in vocationFilter" :key="index">
+                <div class="card">
+                    <div class="title">
+                        {{v.name}}
+                    </div>
+                    <a :href="v.learnUrl">学习资料</a>
+                    <a :href="v.workUrl">实习信息</a>
+                    <a :href="v.commentUrl">前辈说</a>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 15px;">更多内容开发中...</p>
+        </div>
+        <div id="footer">
+            <ul class="horizontalMenu">
+                <li v-for="(item, index) in downMenu" :key="index" :class="{menuChosen:item.isChosen}" @click="sendRedirect(item.url)">
+                    <span :class="item.iconClass" aria-hidden="true"></span><br>{{item.label}}
+                </li>
+            </ul>
+        </div>
+    </div>  
+</body>
+</html>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            topMenu: [
+                {name: '教育师范', isChosen: true},
+                {name: '编程开发', isChosen: false},
+                {name: '媒体设计', isChosen: false}
+            ],
+            downMenu: [
+                {iconClass: 'glyphicon glyphicon-list', label: '课程', url: './course.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-heart', label: '体验', url: './experience.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-comment', label: '交流', url: './enhance.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-yen', label: '职业', url: './try.html', isChosen: true},
+                {iconClass: 'glyphicon glyphicon-user', label: '我的', url: './my.html', isChosen: false}
+            ],
+            vocations: [
+                {name: '前端开发工程师', learnUrl: './vocations/qianduanXue.html', workUrl: './vocations/qianduanShixi.html', commentUrl: './vocations/qianduanShuo.html', tag: '编程开发'},
+                {name: '客户端开发工程师', learnUrl: './vocations/kehuduanXue.html', workUrl: './vocations/kehuduanShixi.html', commentUrl: './vocations/kehuduanShuo.html', tag: '编程开发'},
+                // {name: '后端开发工程师', learnUrl: './vocations/houduanXue.html', workUrl: './vocations/houduanShixi.html', commentUrl: './vocations/houduanShuo.html', tag: '编程开发'},
+                {name: '网页UI设计师', learnUrl: './vocations/UIXue.html', workUrl: './vocations/UIShixi.html', commentUrl: './vocations/UIShuo.html', tag: '媒体设计'},
+                {name: '3D建模师', learnUrl: './vocations/TDXue.html', workUrl: './vocations/TDShixi.html', commentUrl: './vocations/TDShuo.html', tag: '媒体设计'},
+                {name: '信息技术老师', learnUrl: './vocations/CTeacherXue.html', workUrl: './vocations/CTeacherShixi.html', commentUrl: './vocations/CTeacherShuo.html', tag: '教育师范'},
+                {name: '少儿机器人编程老师', learnUrl: './vocations/CodeTeacherXue.html', workUrl: './vocations/CodeTeacherShixi.html', commentUrl: './vocations/CodeTeacherShuo.html', tag: '教育师范'},
+            ],
+            tagChoose: '教育师范',
+            search: ''
+        },
+        computed: {
+            vocationFilter:function(){
+                const {tagChoose, search, vocations} = this
+                let fv
+                fv = this.vocations.filter(v => tagChoose.indexOf(v.tag) >= 0 &&  v.name.indexOf(this.search) >= 0)
+
+                // fv = fv.filter(v => v.name.indexOf(search) >= 0)
+                return fv
+            }
+        },
+        methods: {
+            changeTag:function(newTag){
+                this.tagChoose = newTag
+                this.topMenu.forEach(element => {
+                    if(element.name === newTag){
+                        element.isChosen = true
+                    }else{
+                        element.isChosen = false;
+                    }
+                });
+            },
+            sendRedirect:function(url){
+                window.location.href = url
+            }
+        },
+    })
+</script>

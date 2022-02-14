@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="./vue.js"></script>
+    <title>我的</title>
+    <style>
+        body,html{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #EEE;
+        }
+        #header{
+            position: absolute;
+            top: 0;
+            width: 100%;
+            padding: 20px;
+            font-size: 36px;
+            padding-top: 20px;
+            color: goldenrod;
+        }
+        #idcard{
+            display: flex;
+            justify-content: space-around;
+        }
+        #content{
+            position: absolute;
+            bottom: 60px;
+            top: 170px;
+            left: 5%;
+            right: 5%;
+            width: 90%;
+            /* background-color: aquamarine; */
+            overflow: auto;
+        }
+        .contentContainer{
+            width: 100%;
+            border-style: solid;
+            border-radius: 15px;
+            border-color: rgb(160, 160, 255);
+            background-color: rgb(245, 245, 255);
+            border-width: 3px;
+        }
+        .contentContainer .up{
+            width: 95%;
+            padding: 10px;
+        }
+        .contentContainer .up #collectionContent{
+            border-radius: 15px;
+            border-color: rgb(160, 160, 255);
+            border-style: solid;
+            border-width: 2px;
+            padding: 10px;
+            margin: 5px;
+            text-align: center;
+            font-size: 24px;
+            background-color: #314E92;
+            color: white;
+        }
+        .contentContainer .up .recordContent{
+            border-radius: 15px;
+            border-color: rgb(160, 160, 255);
+            border-style: solid;
+            border-width: 2px;
+            padding: 10px;
+            margin: 5px;
+            text-align: left;
+            font-size: 16px;
+            background-color: #314E92;
+            color: white;
+        }
+        .contentContainer .down{
+            margin-top: 10px;
+            padding-bottom: 5px;
+            text-align: right;
+        }
+        .contentContainer .down .label{
+            padding: 10px 20px 10px 20px;
+            color: whitesmoke;
+            background-color: #314E92;
+            border-radius: 10px;
+        }
+        #footer{
+            position: absolute;
+            bottom: 0;
+            padding-top: 10px;
+            height: 60px;
+            width: 100%;
+            background-color: whitesmoke;
+        }
+        .horizontalMenu{
+            display: flex;
+            justify-content: space-between;
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+        .horizontalMenu li{
+            list-style-type: none;
+            font-size: 12px;
+            width: 150px;
+            text-align: center;
+        }
+        .menuChosen{
+            color: #314E92;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="header">
+            <!-- <div style="text-align: right; width: 100%;">
+                <i class="glyphicon glyphicon-log-out" @click="logout"></i>
+            </div> -->
+            <div id="idcard">
+                <img src="https://tse4-mm.cn.bing.net/th/id/OIP-C.7SVMtmjfaFSj5VG540Kg4gAAAA?pid=ImgDet&rs=1" alt="" style="width: 75px; height: 75px; border-radius: 100px; border-color: black; border-style: solid; border-width: 3px; align-self: center;">
+                <div>
+                    <h2 style="color: #314E92; font-weight: 600; display: flex;justify-content: space-between; width: 100%;"><span>小橙子</span>&nbsp;<i class="glyphicon glyphicon-log-out" style="color: goldenrod;" @click="logout"></i></h2>
+                    <h5 style="color: rgb(125, 125, 125);">2021级教育技术学（师范）01</h5>
+                </div>
+            </div>
+            <hr color="#CCC">
+        </div>
+        <div id="content">
+            <div class="contentContainer">
+                <div class="up" style="display: flex;">
+                    <div id="collectionContent" v-for="(item, index) in collections" :key="index" @click="collectionTips">
+                        <span :class="item.iconClass"></span>
+                        <br>
+                        <span>{{item.label}}</span>
+                    </div>
+                </div>
+                <div class="down">
+                    <span class="label">我的收藏</span>
+                </div>
+            </div>
+            <br>
+            <div class="contentContainer">
+                <div class="up" style="height: 250px; overflow: auto;">
+                    <div class="recordContent" style="text-align: center;" @click="addRecord">
+                        <span class="glyphicon glyphicon-plus-sign"></span>
+                    </div>
+                    <div class="recordContent" v-for="(item, index) in records" :key="index">
+                        <span>{{item}}</span>
+                    </div>
+                </div>
+                <div class="down">
+                    <span class="label">我的记录</span>
+                </div>
+            </div>
+        </div>
+        <div id="footer">
+            <ul class="horizontalMenu">
+                <li v-for="(item, index) in downMenu" :key="index" :class="{menuChosen:item.isChosen}" @click="sendRedirect(item.url)">
+                    <span :class="item.iconClass" aria-hidden="true"></span><br>{{item.label}}
+                </li>
+                <!-- <li><span class="glyphicon glyphicon-list" aria-hidden="true"></span><br>课程</li>
+                <li><span class="glyphicon glyphicon-heart" aria-hidden="true"></span><br>体验</li>
+                <li><span class="glyphicon glyphicon-flag" aria-hidden="true"></span><br>尝试</li>
+                <li><span class="glyphicon glyphicon-signal" aria-hidden="true"></span><br>提高</li>
+                <li style="color: #314E92;"><span class="glyphicon glyphicon-user" aria-hidden="true"></span><br>我的</li> -->
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            downMenu: [
+                {iconClass: 'glyphicon glyphicon-list', label: '课程', url: './course.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-heart', label: '体验', url: './experience.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-comment', label: '交流', url: './enhance.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-yen', label: '职业', url: './try.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-user', label: '我的', url: './my.html', isChosen: true}
+            ],
+            collections: [
+                {iconClass: 'glyphicon glyphicon-list', label: '课 程', url: ''},
+                {iconClass: 'glyphicon glyphicon-wrench', label: '实 习', url: ''}
+            ],
+            records: [
+                '2022.1.7 C语言拿到了A+',
+                '2021.10 第一次接触做开发的前辈，感觉跟我想象中的不太一样',
+                '2021.9.21 C语言好有趣，想做开发类职业',
+                '2021.9.15 正式进入深圳大学'
+            ]
+        },
+        methods: {
+            logout:function(){
+                var r = confirm('你确定要登出账号吗？')
+                if(r === true){
+                    alert('别啦，没别的账号给你登录了！\n好吧其实就是没开发完啦！')
+                }
+            },
+            collectionTips:function(){
+                alert('收藏里将会放入你所收藏的课程或实习内容，\n仍在开发中，\n谢谢支持！')
+            },
+            addRecord:function(){
+                let str = prompt('请输入新的记录：')
+                if(str != null && str != ''){
+                    this.records.unshift(str)
+                }
+            },
+            sendRedirect:function(url){
+                window.location.href = url
+            }
+        },
+    })
+</script>

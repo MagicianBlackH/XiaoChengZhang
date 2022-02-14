@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="../vue.js"></script>
+    <title>体验之教师</title>
+    <style>
+        body,html{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #EEE;
+        }
+        #header{
+            position: absolute;
+            display: flex;
+            justify-content: space-around;
+            z-index: 1;
+            top: 0;
+            border-radius: 0 0 30px 30px;
+            width: 100%;
+            padding-top: 20px;
+            /* padding-bottom: 20px; */
+            text-align: center;
+            font-size: 32px;
+            color: gold;
+            background-color: #314E92;
+        }
+        #game{
+            position: absolute;
+            bottom: 60px;
+            top: 0px;
+            left: 0;
+            right: 0;
+            background-size: cover;
+        }
+        .scriptContainer{
+            border-color: #314E92;
+            width: 90%;
+            left: 5%;
+            position: absolute;
+            bottom: 30px;
+            border-style: solid;
+            border-radius: 10px;
+            border-width: 3px;
+            background-color: #3757a1;
+            color: rgb(252, 247, 218);
+            padding: 20px;
+            font-size: 24px;
+        }
+        .choiceContainer{
+            position: absolute;
+            width: 90%;
+            left: 5%;
+            top: 200px;
+        }
+        #footer{
+            position: absolute;
+            bottom: 0;
+            padding-top: 10px;
+            height: 60px;
+            width: 100%;
+            background-color: whitesmoke;
+        }
+        .horizontalMenu{
+            display: flex;
+            justify-content: space-between;
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+        .horizontalMenu li{
+            list-style-type: none;
+            font-size: 12px;
+            width: 150px;
+            text-align: center;
+        }
+        .menuChosen{
+            color: #314E92;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="header">
+            &nbsp;
+            <img v-for="count in score" src="./star.png" alt="" style="width: 32px; height: 32px;">
+            <!-- <i v-for="count in score" class="glyphicon glyphicon-star"></i> -->
+            <i v-for="count in 5-score" style="color: black;" class="glyphicon glyphicon-star"></i>
+            &nbsp;
+        </div>
+        <div id="game">
+            <div class="choiceContainer" v-if="nowHaveChoice">
+                <button style="margin-top: 20px;" type="button" class="btn btn-warning btn-lg btn-block" v-for="(choice, index) in gameScripts[scriptNowIndex].choices" :key="index" @click="nextScript(1, index)">
+                    {{choice.text}}
+                </button>
+            </div>
+            <div class="scriptContainer" v-show="nowHaveChoice">
+                {{gameScripts[scriptNowIndex].text}}
+            </div>
+            <div class="scriptContainer" v-show="!nowHaveChoice" @click="nextScript(0, -1)">
+                {{gameScripts[scriptNowIndex].text}}
+                <div style="text-align: right;"><span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></div>
+            </div>
+        </div>
+        <div id="footer">
+            <ul class="horizontalMenu">
+                <li v-for="(item, index) in downMenu" :key="index" :class="{menuChosen:item.isChosen}" @click="sendRedirect(item.url)">
+                    <span :class="item.iconClass" aria-hidden="true"></span><br>{{item.label}}
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            downMenu: [
+                {iconClass: 'glyphicon glyphicon-list', label: '课程', url: '../course.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-heart', label: '体验', url: '../experience.html', isChosen: true},
+                {iconClass: 'glyphicon glyphicon-comment', label: '交流', url: '../enhance.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-yen', label: '职业', url: '../try.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-user', label: '我的', url: '../my.html', isChosen: false}
+            ],
+            gameScripts: [
+                {
+                    id: 0,
+                    text: '叮铃铃，早上7点，闹钟响了，你从床上爬了起来，迅速洗漱了一下，整理衣装，简单地吃了个早餐，就出门了。',
+                    haveChoices: false,
+                    nextIndex: 1,
+                    imgUrl: 'https://gss0.baidu.com/-vo3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/32fa828ba61ea8d3f0c8de46910a304e241f588d.jpg',
+                    score: 0
+                },
+                {
+                    id: 1,
+                    text: '清早的街道上有些许宁静，路上行人较少，能听到清脆的鸟叫声，一天的生活由此开始了！',
+                    haveChoices: false,
+                    nextIndex: 2,
+                    imgUrl: 'https://pic1.zhimg.com/v2-b0ad08ab76de7cee0d09b17500b8ebf9_r.jpg',
+                    score: 0
+                },
+                {
+                    id: 2,
+                    text: '7点45，你来到办公室，与其他各位老师们打了招呼后，你来到自己的座位上，准备今天要做的工作。',
+                    haveChoices: false,
+                    nextIndex: 3,
+                    imgUrl: 'https://www.manpingou.com/uploads/allimg/180810/25-1PQ0094KQ51.jpg',
+                    score: 0
+                },
+                {
+                    id: 3,
+                    text: '8点时学生们要进行早操，7点55，你对话筒、音响设备进行专业性的调试。（分数+1，现在你该注意到游戏上方有评分系统了。）',
+                    haveChoices: false,
+                    nextIndex: 4,
+                    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fedu.chachaba.com%2FUploads%2F2020-05-15%2F5ebe41c316657.jpg&refer=http%3A%2F%2Fedu.chachaba.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642222049&t=388f5f2783eb5fd480e9b9214713af5d',
+                    score: 1
+                },
+                {
+                    id: 4,
+                    text: '9点，你来到信息技术课室进行你的第一堂课。',
+                    haveChoices: false,
+                    nextIndex: 5,
+                    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg6.ddove.com%2Fupload%2F20161230%2F153409909906.jpg&refer=http%3A%2F%2Fimg6.ddove.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642222247&t=d31c7f0a3fd5110261b4327e2e3c8aed',
+                    score: 0
+                },
+                {
+                    id: 5,
+                    text: '上着上着，你听见学生们聊天的声音越来越大，你决定：',
+                    haveChoices: true,
+                    choices: [
+                        {id: 0, text: '视而不见', nextIndex: 6},
+                        {id: 1, text: '严厉制止', nextIndex: 7}
+                    ],
+                    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg6.ddove.com%2Fupload%2F20161230%2F153409909906.jpg&refer=http%3A%2F%2Fimg6.ddove.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642222247&t=d31c7f0a3fd5110261b4327e2e3c8aed',
+                    score: 0
+                },
+                {
+                    id: 6,
+                    text: '你没有理会学生们的行为，继续上课，然而学生们该聊的聊，该玩的玩，对你的课程不屑一顾。',
+                    haveChoices: false,
+                    nextIndex: 8,
+                    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg6.ddove.com%2Fupload%2F20161230%2F153409909906.jpg&refer=http%3A%2F%2Fimg6.ddove.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642222247&t=d31c7f0a3fd5110261b4327e2e3c8aed',
+                    score: -1
+                },
+                {
+                    id: 7,
+                    text: '学生们瞬间安静下来，你又继续讲课，学生们变得认真多了。',
+                    haveChoices: false,
+                    nextIndex: 8,
+                    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg6.ddove.com%2Fupload%2F20161230%2F153409909906.jpg&refer=http%3A%2F%2Fimg6.ddove.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642222247&t=d31c7f0a3fd5110261b4327e2e3c8aed',
+                    score: 1
+                },
+                {
+                    id: 8,
+                    text: '中午，你来到食堂进餐，想起早上的经历，不禁感慨：“学生年纪小，总觉得电脑课就是有电脑玩，纪律不好管，上信息技术课不容易呀！”',
+                    haveChoices: false,
+                    nextIndex: 9,
+                    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fn.sinaimg.cn%2Ffront%2F144%2Fw1080h664%2F20181202%2Fz08h-hpinryc0874284.jpg&refer=http%3A%2F%2Fn.sinaimg.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642223221&t=79fbf38ddf23bafd79060d5d7a2a0e6a',
+                    score: 0
+                },
+                {
+                    id: 9,
+                    text: '恰巧旁边一位老师听到了你说的话，他回到：“上什么课都不容易哟！而且当老师算好咯，虽然有时候挺难做，但比社会上其他工作稳定多啦，又有保障。”',
+                    haveChoices: false,
+                    nextIndex: 10,
+                    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fn.sinaimg.cn%2Ffront%2F144%2Fw1080h664%2F20181202%2Fz08h-hpinryc0874284.jpg&refer=http%3A%2F%2Fn.sinaimg.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642223221&t=79fbf38ddf23bafd79060d5d7a2a0e6a',
+                    score: 0
+                },
+                {
+                    id: 10,
+                    text: '饭后，你回到了办公室，趴在办公桌上小酣了一会。',
+                    haveChoices: false,
+                    nextIndex: 11,
+                    imgUrl: 'https://www.manpingou.com/uploads/allimg/180810/25-1PQ0094KQ51.jpg',
+                    score: 0
+                },
+                {
+                    id: 11,
+                    text: '下午2点，“叮铃铃”，手机响了，你接起电话：“小橙子老师，三年级二班的电脑上不了网呀，你能帮忙来看看吗？”',
+                    haveChoices: false,
+                    nextIndex: 12,
+                    imgUrl: 'https://www.manpingou.com/uploads/allimg/180810/25-1PQ0094KQ51.jpg',
+                    score: 0
+                },
+                {
+                    id: 12,
+                    text: '你前去课室查看，发现网线等物理连接完好，但网页无法加载，你决定：',
+                    haveChoices: true,
+                    choices: [
+                        {id: 0, text: '联系负责校园网的外包公司', nextIndex: 13},
+                        {id: 1, text: '继续检查系统中的网络配置', nextIndex: 14}
+                    ],
+                    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201706%2F17%2F20170617143047_ZHwrt.thumb.700_0.jpeg&refer=http%3A%2F%2Fb-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642223892&t=5f2959227ba49a0ebc4b5d9aead1b818',
+                    score: 0
+                },
+                {
+                    id: 13,
+                    text: '外包公司检查了大半天，发现他们那边没问题，提醒你检查一下DNS等配置。你修改DNS终于解决了问题，可上课时间已经过去一大半了。',
+                    haveChoices: false,
+                    nextIndex: 15,
+                    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201706%2F17%2F20170617143047_ZHwrt.thumb.700_0.jpeg&refer=http%3A%2F%2Fb-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642223892&t=5f2959227ba49a0ebc4b5d9aead1b818',
+                    score: -1
+                },
+                {
+                    id: 14,
+                    text: '你发现原来是DNS被恶意修改了，你重新配置了一下，网络很快就恢复了正常，老师和同学们都给你点了个赞。',
+                    haveChoices: false,
+                    nextIndex: 15,
+                    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201706%2F17%2F20170617143047_ZHwrt.thumb.700_0.jpeg&refer=http%3A%2F%2Fb-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642223892&t=5f2959227ba49a0ebc4b5d9aead1b818',
+                    score: 1
+                },
+                {
+                    id: 15,
+                    text: '下午放学后，一位留下来学习的学生向你提问：“我想让智能机器人一直重复播放欢乐颂，怎么办？”你回答：',
+                    haveChoices: true,
+                    choices: [
+                        {id: 0, text: '在播放函数外层写一个死循环', nextIndex: 16},
+                        {id: 1, text: '复制多几个音乐播放函数', nextIndex: 17}
+                    ],
+                    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F201506%2F01%2F20150601180430_UsEVF.thumb.400_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642224143&t=b7db87d331399253adbd559cd81bc348',
+                    score: 0
+                },
+                {
+                    id: 16,
+                    text: '学生豁然开朗，开心地笑了！',
+                    haveChoices: false,
+                    nextIndex: 18,
+                    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F201506%2F01%2F20150601180430_UsEVF.thumb.400_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642224143&t=b7db87d331399253adbd559cd81bc348',
+                    score: 1
+                },
+                {
+                    id: 17,
+                    text: '学生感到疑惑，按你说的做，可音乐播放了几次之后还是停下来了。',
+                    haveChoices: false,
+                    nextIndex: 18,
+                    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F201506%2F01%2F20150601180430_UsEVF.thumb.400_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642224143&t=b7db87d331399253adbd559cd81bc348',
+                    score: -1
+                },
+                {
+                    id: 18,
+                    text: '下午5点30，你下班离开了学校，走在路上，此时心里想着：',
+                    haveChoices: true,
+                    choices: [
+                        {id: 0, text: '当信息技术老师真有意思', nextIndex: 19},
+                        {id: 1, text: '当信息技术老师真无聊', nextIndex: 20}
+                    ],
+                    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F201803%2F30%2F20180330095356_rinxo.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642249282&t=45fd425bb71edb9a30cfc29c01563005',
+                    score: 0
+                },
+                {
+                    id: 19,
+                    text: '“当信息技术老师真有意思”',
+                    haveChoices: false,
+                    nextIndex: 21,
+                    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F201803%2F30%2F20180330095356_rinxo.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642249282&t=45fd425bb71edb9a30cfc29c01563005',
+                    score: 1
+                },
+                {
+                    id: 20,
+                    text: '“当信息技术老师真无聊”',
+                    haveChoices: false,
+                    nextIndex: 21,
+                    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F201803%2F30%2F20180330095356_rinxo.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642249282&t=45fd425bb71edb9a30cfc29c01563005',
+                    score: -1
+                },
+                {
+                    id: 21,
+                    text: '信息技术老师的体验到此结束，屏幕上方的实心星星个数即你的得分，最高为5，最低为0。该得分可供您参考你是否喜欢这个职业，但记住、仅供参考。',
+                    haveChoices: false,
+                    nextIndex: -1,
+                    imgUrl: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F201803%2F30%2F20180330095356_rinxo.thumb.1000_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1642249282&t=45fd425bb71edb9a30cfc29c01563005',
+                    score: 0
+                },
+            ],
+            scriptNowIndex: 0,
+            nowHaveChoice: false,
+            imgUrl: '',
+            score: 4
+        },
+        mounted() {
+            this.scriptNowIndex = 0
+            this.nowHaveChoice = this.gameScripts[0].haveChoices
+            this.imgUrl = this.gameScripts[0].imgUrl
+            document.getElementById('game').style.backgroundImage = "url(" + this.imgUrl + ")"
+            this.score = 4
+        },
+        methods: {
+            sendRedirect:function(url){
+                window.location.href = url
+            },
+            // isChoice 表明是否是从选项过来的，1表示是，0表示不是；choiceIndex表示选项的下标
+            nextScript:function(isChoice, choiceIndex){
+                console.log('next')
+                let index = this.scriptNowIndex
+                let nextIndex = 0
+                if(isChoice === 1){
+                    // 获取下个文本的index
+                    nextIndex = this.gameScripts[index].choices[choiceIndex].nextIndex
+                    console.log('下个文本的Index：' + nextIndex)
+                }else if(isChoice === 0){
+                    // 获取下个文本的index
+                    nextIndex = this.gameScripts[index].nextIndex
+                    console.log('下个文本的Index：' + nextIndex)
+                }
+                if(nextIndex === -1){
+                    window.location.href = '../experience.html'
+                }
+                else{
+                    // 更新下个文本是否有选项
+                    this.nowHaveChoice = this.gameScripts[nextIndex].haveChoices
+                    // 更新分数
+                    this.score += this.gameScripts[nextIndex].score
+                    // 调整分数
+                    this.score = this.score > 5 ? 5 : this.score
+                    this.score = this.score < 0 ? 0 : this.score
+                    console.log('分数现在为：' + this.score)
+                    // 更新当前index
+                    this.scriptNowIndex = nextIndex
+                    // 更新背景图片
+                    if(this.imgUrl != this.gameScripts[nextIndex].imgUrl){
+                        this.imgUrl = this.gameScripts[nextIndex].imgUrl
+                        document.getElementById('game').style.backgroundImage = "url(" + this.imgUrl + ")"
+                    }
+                }
+            }
+        },
+    })
+</script>

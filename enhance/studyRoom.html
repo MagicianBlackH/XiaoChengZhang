@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="../vue.js"></script>
+    <title>自习室</title>
+    <style>
+        body,html{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #4562a5;
+        }
+        #header{
+            position: absolute;
+            font-size: 24px;
+            top: 0;
+            border-radius: 0 0 30px 30px;
+            width: 100%;
+            padding-top: 20px;
+            color: whitesmoke;
+            background-color: #314E92;
+        }
+        #headerNav{
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        #underpoint{
+            margin: auto;
+            width: 8px;
+            height: 8px;
+            border-radius: 8px;
+            background-color: gold;
+            border-style: solid;
+        }
+        #subHeader{
+            position: absolute;
+            top: 75px;
+            left: 0;
+            right: 0;
+        }
+        #peoContainer{
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .headImg{
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+        }
+        #content{
+            position: absolute;
+            top: 240px;
+            bottom: 130px;
+            left: 0;
+            right: 0;
+            overflow: auto;
+        }
+        .messageContainer{
+            display: flex;
+            justify-content: space-around;
+            width: 90%;
+            margin: auto;
+            margin-top: 10px;
+        }
+        .message{
+            border-radius: 15px;
+            border-style: solid;
+            border-color: black;
+            background-color: whitesmoke;
+            border-width: 3px;
+            width: 60%;
+            padding: 10px;
+            word-wrap: break-word;
+        }
+        #chat{
+            position: absolute;
+            bottom: 80px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-around;
+        }
+        #footer{
+            position: absolute;
+            bottom: 0;
+            padding-top: 10px;
+            height: 60px;
+            width: 100%;
+            background-color: whitesmoke;
+        }
+        .horizontalMenu{
+            display: flex;
+            justify-content: space-between;
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+        .horizontalMenu li{
+            list-style-type: none;
+            font-size: 12px;
+            width: 150px;
+            text-align: center;
+        }
+        .menuChosen{
+            color: #314E92;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="header">
+            <div id="headerNav">
+                &nbsp;
+                <span @click="sendRedirect('../enhance.html')">讨论区</span>
+                <span style="color: gold;">自习室<br><div id="underpoint"></div></span>
+                &nbsp;
+            </div>
+        </div>
+        <div id="subHeader" style="text-align: center;">
+            <h4 style="color: gold; font-weight: 600;">自习室·拼搏一把，你我皆是牛马</h4>
+            <br>
+            <div id="peoContainer">
+                <div v-for="(mate, index) in mates" :key="index">
+                    <img @click="addOrRemove(index, mate.show)" :src="mate.headImg" alt="" class="headImg" v-show="mate.show">
+                    <div @click="addOrRemove(index, mate.show)" class="headImg" v-show="!mate.show" style="background-color: goldenrod; font-size: 32px; font-weight: 900; color: #FFF; text-align: center;">+</div>
+                    <br>
+                    <span style="margin-top: 5px; color: #FFF;" v-show="mate.show">{{mate.name}}</span>
+                </div>
+            </div>
+        </div>
+        <div id="content">
+            <div class="messageContainer" v-for="(item, index) in messages" :key="index">
+                <img :src="item.headImg" alt="" class="headImg" v-show="!item.isMine">
+                <div class="headImg" style="background-color: #4562a5;" v-show="item.isMine"></div>
+                <p class="message">{{item.message}}</p>
+                <img :src="item.headImg" alt="" class="headImg" v-show="item.isMine">
+                <div class="headImg" style="background-color: #4562a5;" v-show="!item.isMine"></div>
+            </div>
+        </div>
+        <div id="chat">
+            <div style="width: 70%;">
+                <input class="form-control" id="myChatText" placeholder="输入你想发送的..." style="border-radius: 15px;">
+            </div>
+            <div style="width: 25%;">
+                <button @click="sendMessage" type="button" class="btn btn-success btn-block" style="border-radius: 15px;"><span class="glyphicon glyphicon-send" aria-hidden="true"></span>&nbsp;发送</button>
+            </div>
+        </div>
+        <div id="footer">
+            <ul class="horizontalMenu">
+                <li v-for="(item, index) in downMenu" :key="index" :class="{menuChosen:item.isChosen}" @click="sendRedirect(item.url)">
+                    <span :class="item.iconClass" aria-hidden="true"></span><br>{{item.label}}
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            downMenu: [
+                {iconClass: 'glyphicon glyphicon-list', label: '课程', url: '../course.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-heart', label: '体验', url: '../experience.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-comment', label: '交流', url: '../enhance.html', isChosen: true},
+                {iconClass: 'glyphicon glyphicon-yen', label: '职业', url: '../try.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-user', label: '我的', url: '../my.html', isChosen: false}
+            ],
+            mates: [
+                {name: '小橙子(我)', headImg: 'https://tse1-mm.cn.bing.net/th/id/R-C.d9b4d0499f73ba820816d6c89a1a577e?rik=M57BBzZQk4jsvA&riu=http%3a%2f%2fimg.duoziwang.com%2f2019%2f01%2f02261821911471.jpg&ehk=%2bHRYJowq2SbygdFA3gXScbarlgPYTjMRc6wmupSr4hg%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1', show: true},
+                {name: '小土豆', headImg: 'https://tse1-mm.cn.bing.net/th/id/R-C.c5cff9641bc93db0a3f8e06e9e1d42b1?rik=rgnXoNACS%2boTlw&riu=http%3a%2f%2ffile.qqtouxiang.com%2fkatong%2f2019-08-16%2f785f83f307f79773f49bc06dbdac93e8.jpg&ehk=eT8Du1xXPKCDWLHLsXbjjp3MgL8PQQz5kud8bhJXZJo%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1', show: true},
+                {name: '小年糕', headImg: 'https://tse1-mm.cn.bing.net/th/id/R-C.5ba2e31dad203451f518ec7aadc6bbb6?rik=41qjvllvo7Ttxw&riu=http%3a%2f%2f5b0988e595225.cdn.sohucs.com%2fimages%2f20190626%2f4972655f447b4af2aca453edf2ae6785.jpeg&ehk=dV9vcgFMNVeC6EfiKiXAN1X9OKKeADlgfCZ%2bfmGpeiE%3d&risl=&pid=ImgRaw&r=0', show: true},
+                {name: '小烤肉', headImg: 'https://tse4-mm.cn.bing.net/th/id/OIP-C.xinaPI9d74EHl1FXOYxokgAAAA?pid=ImgDet&rs=1', show: false},
+                {name: '小苹果', headImg: 'https://tse1-mm.cn.bing.net/th/id/R-C.6522117969e8f3e9f0da8c941eba2ae0?rik=sRvB%2fohc%2bQ6nPg&riu=http%3a%2f%2fimg.crcz.com%2fallimg%2f202002%2f29%2f1582947361769020.jpg&ehk=KDH7EsWqSC%2f1%2f5Uu1SNrdjckqYMPdUcJmal5B9j5%2fgg%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1', show: false},
+            ],
+            messages: [
+                {isMine: false, message: '大家一起加油！', headImg: 'https://tse1-mm.cn.bing.net/th/id/R-C.c5cff9641bc93db0a3f8e06e9e1d42b1?rik=rgnXoNACS%2boTlw&riu=http%3a%2f%2ffile.qqtouxiang.com%2fkatong%2f2019-08-16%2f785f83f307f79773f49bc06dbdac93e8.jpg&ehk=eT8Du1xXPKCDWLHLsXbjjp3MgL8PQQz5kud8bhJXZJo%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1'},
+                {isMine: false, message: '我学一下C语言', headImg: 'https://tse1-mm.cn.bing.net/th/id/R-C.5ba2e31dad203451f518ec7aadc6bbb6?rik=41qjvllvo7Ttxw&riu=http%3a%2f%2f5b0988e595225.cdn.sohucs.com%2fimages%2f20190626%2f4972655f447b4af2aca453edf2ae6785.jpeg&ehk=dV9vcgFMNVeC6EfiKiXAN1X9OKKeADlgfCZ%2bfmGpeiE%3d&risl=&pid=ImgRaw&r=0'},
+            ],
+            messageScripts: [
+                '各位，C语言的&到底是什么符号呀？',
+                '太开心了，我又解决一个难题，大家也要一起加油呀！',
+                '好累欸，我休息一下，大家继续肝！我马上就回来！',
+                '有没有谁能给我讲解一下指针呢？',
+                '不定积分要记得最后+C呀，我老忘记！',
+                '导论课开卷考是吧？',
+                '各位，我发现背单词的时候要多写，特别是跟句子一起写，更容易记住！',
+                '有人在学C语言吗，一起呗！',
+                '有人在复习高数吗？一起呗！',
+                '我C语言挺厉害的，不会的尽管问我！',
+                '我在背四级单词了，提前备战！',
+                '我们是最棒的！'
+            ]
+        },
+        mounted() {
+            window.setInterval(this.createMessage, 5000)
+        },
+        watch:{
+            messages:function(){
+                console.log('触发messages的监听')
+                let content = document.getElementById('content')
+                console.log(content.scrollHeight)
+                window.setTimeout(() => {
+                    // let scrollHeight = content.scrollHeight + 66
+                    content.scrollTo({top: content.scrollHeight, left: 0, behavior: 'smooth'})
+                }, 100)
+            }
+        },
+        methods: {
+            sendRedirect:function(url){
+                window.location.href = url
+            },
+            addOrRemove:function(index, isShow){
+                if(index !== 0){
+                    this.mates[index].show = !isShow
+                    if(isShow){
+                        alert('你移除了一位同伴')
+                    }else{
+                        alert('你邀请了一位同伴')
+                    }
+                }
+            },
+            sendMessage:function(){
+                let text = document.getElementById('myChatText').value
+                if(text != null && text != ''){
+                    let my = {
+                        isMine: true,
+                        message: text,
+                        headImg: 'https://tse1-mm.cn.bing.net/th/id/R-C.d9b4d0499f73ba820816d6c89a1a577e?rik=M57BBzZQk4jsvA&riu=http%3a%2f%2fimg.duoziwang.com%2f2019%2f01%2f02261821911471.jpg&ehk=%2bHRYJowq2SbygdFA3gXScbarlgPYTjMRc6wmupSr4hg%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1'
+                    }
+                    this.messages.push(my)
+                    document.getElementById('myChatText').value = ''          
+                }
+            },
+            createMessage:function(){
+                console.log('生成一条消息')
+                let index = 0
+                // 先检查有没有能发言的人
+                let can = false
+                this.mates.forEach(e => {
+                    if(e.name!='小橙子(我)' && e.show){
+                        can = true
+                    }
+                })
+                if(can){
+                    // 生成目前除自已以外的房间存在的人
+                    while(index === 0 || !this.mates[index].show){
+                        index = Math.floor(Math.random() * (this.mates.length - 1) + 1)
+                    }
+                    // 随机取一条消息
+                    let messageIndex = Math.floor(Math.random() * this.messageScripts.length)
+                    let other = {
+                        isMine: false,
+                        message: this.messageScripts[messageIndex],
+                        headImg: this.mates[index].headImg
+                    }
+                    this.messages.push(other)
+                }
+            }
+        }
+    })
+</script>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="zhiye.css" type="text/css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="../vue.js"></script>
+    <title>前端开发前辈说</title>
+    <style>
+        body,html{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #EEE;
+        }
+        #header{
+            position: absolute;
+            display: flex;
+            justify-content: space-between;
+            top: 0;
+            width: 100%;
+            padding: 20px;
+            font-size: 36px;
+            padding-top: 20px;
+            color: #314E92;
+        }
+        #content{
+            position: absolute;
+            bottom: 60px;
+            top: 90px;
+            width: 100%;
+            overflow: auto;
+            color: #7a7a7a;
+        }
+        #footer{
+            position: absolute;
+            bottom: 0;
+            padding-top: 10px;
+            height: 60px;
+            width: 100%;
+            background-color: whitesmoke;
+        }
+        .horizontalMenu{
+            display: flex;
+            justify-content: space-between;
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+        .horizontalMenu li{
+            list-style-type: none;
+            font-size: 12px;
+            width: 150px;
+            text-align: center;
+        }
+        .menuChosen{
+            color: #314E92;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div id="header">
+            <a href="../try.html">
+                <span class="el-icon-arrow-left"></span>
+            </a>
+            <span style="font-size: 18px; align-self: center;">前端工程师前辈说</span>
+            <a @click="thanks">
+                <span class="el-icon-collection-tag"></span>
+            </a>
+        </div>
+        <div id="content">
+            <div v-for="(p, index) in senpaiList" :key="index" class="card">
+                <div class="profile_part1">
+                    <div class="profile_img">
+                        <img :src="p.imgUrl" alt="" class="img">
+                    </div>
+                    <div class="profile_contact">
+                        <p>微信：{{p.vc}}</p>
+                        <p>邮箱：{{p.email}}</p>
+                    </div>
+                </div>
+                <div class="profile_part2">
+                    <div class="profile_more">
+                        <p>{{p.desc}}</p>
+                        <p>工作环境：{{p.envior}}</p>
+                        <p>职业特点：{{p.char}}</p>
+                    </div>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 15px;">更多内容开发中...</p>
+        </div>
+        <div id="footer">
+            <ul class="horizontalMenu">
+                <li v-for="(item, index) in downMenu" :key="index" :class="{menuChosen:item.isChosen}" @click="sendRedirect(item.url)">
+                    <span :class="item.iconClass" aria-hidden="true"></span><br>{{item.label}}
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            downMenu: [
+                {iconClass: 'glyphicon glyphicon-list', label: '课程', url: '../course.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-heart', label: '体验', url: '../experience.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-comment', label: '交流', url: '../enhance.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-yen', label: '职业', url: '../try.html', isChosen: true},
+                {iconClass: 'glyphicon glyphicon-user', label: '我的', url: '../my.html', isChosen: false}
+            ],
+            senpaiList: [
+                {imgUrl: 'https://www.keaidian.com/uploads/allimg/191114/14161619_21.jpg', vc: 'HHHIOY', email: '123@gmail.com', desc: 'AAL公司前端工程师，刚入职3个月，还没什么重要任务给到我，平时都是写写简单的逻辑。', envior: '还行吧，平时代码从晚上打着打着不知不觉又到晚上了，时间过得很快。', char: '熬夜、秃头'},
+                {imgUrl: './paimon.jpg', vc: '10086', email: '10086@gmail.com', desc: '我在ttxx公司当前端开发工程师已经3年了，目前月入过2W，来不来加入我？', envior: '大厂吃喝还算好，虽然团队开发，但打代码的时候经常是安静而孤独的。', char: '改需求改需求改需求还是改需求。'}
+            ]
+        },
+        methods: {
+            sendRedirect:function(url){
+                window.location.href = url
+            },
+            thanks:function(){
+                alert("这是收藏功能，\n还在开发中，\n谢谢支持！")
+            }
+        }
+    })
+</script>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="./courseCSS.css">
+    <script src="../vue.js"></script>
+    <title>电视编导与制作</title>
+</head>
+<body>
+    <div id="app">
+        <div id="header">
+            <a href="../course.html">
+                <span class="el-icon-arrow-left"></span>
+            </a>
+            <span style="font-size: 18px; align-self: center;">课程详情</span>
+            <a @click="thanks">
+                <span class="el-icon-collection-tag"></span>
+            </a>
+        </div>
+        <div id="content">
+            <h2 style="font-weight: 700;">电视编导与制作</h2>
+            <h4 class="para" style="margin-top: 20px;">&nbsp;李文光</h4>
+            <div id="video">
+                <p>我是简单的短视频</p>
+            </div>
+
+            <h3 style="color: rgb(88, 88, 88);">职业标签</h3>
+            <span class="label label-warning labelAdjust">视频剪辑</span>
+            <span class="label label-warning labelAdjust">视频特效</span>
+            <span class="label label-warning labelAdjust">电影鉴赏</span>
+
+            <h3 style="color: rgb(88, 88, 88);">概况</h3>
+            <p class="para">
+                这门课以鉴赏电影为主，主要软件多靠自学<br>
+                期末以做项目为主。
+            </p>
+            <h3 style="color: rgb(88, 88, 88);">使用软件</h3>
+            <p class="para">AE、PR</p>
+        </div>
+        <div id="footer">
+            <ul class="horizontalMenu">
+                <li v-for="(item, index) in downMenu" :key="index" :class="{menuChosen:item.isChosen}" @click="sendRedirect(item.url)">
+                    <span :class="item.iconClass" aria-hidden="true"></span><br>{{item.label}}
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            downMenu: [
+                {iconClass: 'glyphicon glyphicon-list', label: '课程', url: '../course.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-heart', label: '体验', url: '../experience.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-comment', label: '交流', url: '../enhance.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-yen', label: '职业', url: '../try.html', isChosen: true},
+                {iconClass: 'glyphicon glyphicon-user', label: '我的', url: '../my.html', isChosen: false}
+            ]
+        },
+        methods: {
+            thanks:function(){
+                alert("这是收藏功能，\n还在开发中，\n谢谢支持！")
+            },
+            sendRedirect:function(url){
+                window.location.href = url
+            }
+        },
+    })
+</script>

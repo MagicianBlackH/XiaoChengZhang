@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="zhiye.css" type="text/css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="../vue.js"></script>
+    <title>前端开发学习资料</title>
+    <style>
+        body,html{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #EEE;
+        }
+        #header{
+            position: absolute;
+            display: flex;
+            justify-content: space-between;
+            top: 0;
+            width: 100%;
+            padding: 20px;
+            font-size: 36px;
+            padding-top: 20px;
+            color: #314E92;
+        }
+        #content{
+            position: absolute;
+            bottom: 60px;
+            top: 90px;
+            width: 100%;
+            overflow: auto;
+        }
+        #footer{
+            position: absolute;
+            bottom: 0;
+            padding-top: 10px;
+            height: 60px;
+            width: 100%;
+            background-color: whitesmoke;
+        }
+        .horizontalMenu{
+            display: flex;
+            justify-content: space-between;
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+        .horizontalMenu li{
+            list-style-type: none;
+            font-size: 12px;
+            width: 150px;
+            text-align: center;
+        }
+        .menuChosen{
+            color: #314E92;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div id="header">
+            <a href="../try.html">
+                <span class="el-icon-arrow-left"></span>
+            </a>
+            <span style="font-size: 18px; align-self: center;">前端工程师学习资料</span>
+            <a @click="thanks">
+                <span class="el-icon-collection-tag"></span>
+            </a>
+        </div>
+        <div id="content">
+            <div class="card_1" v-for="(item, index) in learnData" :key="index">
+                <div class="left_xue">
+                    <img :src="item.imgUrl" alt="" class="img">
+                </div>
+                <div class="right_xue">
+                    <div class="info_xue">
+                        <div class="title_xue">{{item.title}}</div>
+                        <div class="desc_xue">{{item.desc}}</div>
+                    </div>
+                    <div class="func_xue">
+                        <button type="button" class="btn btn-warning" style="padding: 0px 20px 0px 20px;" @click="sendRedirect(item.dataUrl)"><span style="align-self: center;">查看</span></button>
+                        <button type="button" class="btn btn-primary" style="padding: 0px 20px 0px 20px; margin-left: 10px;" @click="thanks"><span style="align-self: center;"></span>收藏</span></button>
+                        <!-- <a class="magnify" href="mind.png">查看图片</a>
+                        <div class="collect">加入收藏</div> -->
+                    </div>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 15px;">更多内容开发中...</p>
+        </div>
+        <div id="footer">
+            <ul class="horizontalMenu">
+                <li v-for="(item, index) in downMenu" :key="index" :class="{menuChosen:item.isChosen}" @click="sendRedirect(item.url)">
+                    <span :class="item.iconClass" aria-hidden="true"></span><br>{{item.label}}
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            downMenu: [
+                {iconClass: 'glyphicon glyphicon-list', label: '课程', url: '../course.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-heart', label: '体验', url: '../experience.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-comment', label: '交流', url: '../enhance.html', isChosen: false},
+                {iconClass: 'glyphicon glyphicon-yen', label: '职业', url: '../try.html', isChosen: true},
+                {iconClass: 'glyphicon glyphicon-user', label: '我的', url: '../my.html', isChosen: false}
+            ],
+            learnData: [
+                {title: 'React', desc: '用于构建用户界面的 JavaScript 框架', imgUrl: 'https://coder.clothing/images/stories/virtuemart/product/resized/react-logo6_418x418.png', dataUrl: 'https://react.docschina.org/'},
+                {title: 'Vue', desc: '渐进式JavaScript 框架', imgUrl: 'https://www.mrcoral.co.il/wp-content/uploads/2020/01/%D7%9E%D7%AA%D7%9B%D7%A0%D7%AA-vue.jpg', dataUrl: 'https://cn.vuejs.org/'},
+            ]
+        },
+        methods: {
+            sendRedirect:function(url){
+                window.location.href = url
+            },
+            thanks:function(){
+                alert("这是收藏功能，\n还在开发中，\n谢谢支持！")
+            }
+        }
+    })
+</script>
